@@ -1,8 +1,8 @@
-import React from 'react'
+import Quiz from './page/Quiz/Quiz'
 
 const App = () => {
   return (
-    <div>App</div>
+    <Quiz />
   )
 }
 
