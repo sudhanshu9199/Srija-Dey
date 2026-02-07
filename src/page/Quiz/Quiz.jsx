@@ -3,16 +3,18 @@ import style from './Quiz.module.scss';
 import { questions } from '../../data/questions';
 
 function Quiz() {
-  const studentName = "Sriya";
+  const studentName = "Srija Dey"; // Updated Name
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
+  const [isCorrectState, setIsCorrectState] = useState(null); // To style specific button
 
   const handleAnswerOptionClick = (index) => {
     setSelectedOption(index);
     const isCorrect = index === questions[currentQuestion].correct;
+    setIsCorrectState(isCorrect);
     
     if (isCorrect) {
       setScore(score + 1);
@@ -27,6 +29,7 @@ function Quiz() {
       if (nextQuestion < questions.length) {
         setCurrentQuestion(nextQuestion);
         setSelectedOption(null);
+        setIsCorrectState(null);
         setFeedback("");
       } else {
         setShowScore(true);
@@ -43,48 +46,67 @@ function Quiz() {
   };
 
   return (
-    <div className="app">
-      <div className="container">
+    <div className={style.app}>
+      <div className={style.backgroundShapes}></div> {/* Background Animation */}
+      
+      <div className={style.container}>
         {showScore ? (
-          <div className="score-section">
+          <div className={style.scoreSection}>
             <h2>Quiz Completed!</h2>
-            <div className="gauge">
-              <span>{score} / {questions.length}</span>
+            <div className={style.gauge}>
+              <span>{score}</span> <span className={style.total}>/ {questions.length}</span>
             </div>
-            <p className="message">{getPersonalizedMessage()}</p>
-            <button onClick={() => window.location.reload()}>Restart Quiz 🔄</button>
+            <p className={style.message}>{getPersonalizedMessage()}</p>
+            <button className={style.restartBtn} onClick={() => window.location.reload()}>
+              Restart Quiz 🔄
+            </button>
           </div>
         ) : (
           <>
-            <div className="question-section">
-              <div className="question-count">
-                <span>Question {currentQuestion + 1}</span>/{questions.length}
-              </div>
-              <div className="question-text">{questions[currentQuestion].question}</div>
-              <div className="progress-bar">
+            <div className={style.header}>
+               <div className={style.badge}>Chemistry Quiz</div>
+               <div className={style.progressText}>
+                 Question {currentQuestion + 1} <span className={style.total}>/ {questions.length}</span>
+               </div>
+            </div>
+
+            <div className={style.progressBar}>
                 <div 
-                  className="fill" 
+                  className={style.fill} 
                   style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
                 ></div>
+            </div>
+
+            {/* Key added here triggers animation on change */}
+            <div key={currentQuestion} className={style.questionSection}>
+              <div className={style.questionText}>
+                {questions[currentQuestion].question}
               </div>
             </div>
             
-            <div className="answer-section">
+            <div className={style.answerSection}>
               {questions[currentQuestion].options.map((option, index) => (
                 <button 
                   key={index} 
                   onClick={() => handleAnswerOptionClick(index)}
-                  className={selectedOption === index ? 
-                    (index === questions[currentQuestion].correct ? "correct" : "wrong") 
-                    : ""}
+                  className={`
+                    ${style.optionBtn} 
+                    ${selectedOption === index ? (isCorrectState ? style.correct : style.wrong) : ""}
+                    ${selectedOption !== null && index !== selectedOption ? style.disabled : ""}
+                  `}
                   disabled={selectedOption !== null}
                 >
+                  <span className={style.letter}>{String.fromCharCode(65 + index)}</span>
                   {option}
                 </button>
               ))}
             </div>
             
-            {feedback && <div className="feedback-popup">{feedback}</div>}
+            {feedback && (
+              <div className={`${style.feedbackPopup} ${isCorrectState ? style.success : style.error}`}>
+                {feedback}
+              </div>
+            )}
           </>
         )}
       </div>

@@ -1,147 +1,300 @@
 $primary: #6C63FF;
 $secondary: #2A2A2A;
-$correct: #4CAF50;
+$correct: #00E676;
 $wrong: #FF5252;
 $text: #ffffff;
+$bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+$glass-bg: rgba(255, 255, 255, 0.05);
+$glass-border: rgba(255, 255, 255, 0.1);
 
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background-color: #1F1F2E; // Dark mode feel
-  color: $text;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 .app {
   width: 100%;
-  max-width: 400px; // Mobile width priority
-  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  background: $bg-gradient;
+  color: $text;
+  position: relative;
+  overflow: hidden;
+}
+
+// Moving Background Blobs
+.backgroundShapes {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  overflow: hidden;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: $primary;
+    filter: blur(90px);
+    opacity: 0.4;
+    border-radius: 50%;
+    animation: moveBlob 10s infinite alternate;
+  }
+
+  &::before {
+    top: -50px;
+    left: -50px;
+  }
+
+  &::after {
+    bottom: -50px;
+    right: -50px;
+    background: #FF007A;
+    animation-delay: -5s;
+  }
+}
+
+@keyframes moveBlob {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(50px, 50px) scale(1.2); }
 }
 
 .container {
-  background-color: $secondary;
+  position: relative;
+  z-index: 10;
+  background: $glass-bg;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   width: 90%;
-  margin: 20px auto;
-  border-radius: 20px;
+  max-width: 450px;
+  border-radius: 24px;
   padding: 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  border: 1px solid $glass-border;
+  animation: slideUp 0.6s ease-out;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.badge {
+  background: rgba($primary, 0.2);
+  color: #a29bfe;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.progressText {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  
+  .total {
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+  }
+}
+
+.progressBar {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  
+  .fill {
+    height: 100%;
+    background: linear-gradient(90deg, $primary, #a29bfe);
+    border-radius: 10px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba($primary, 0.5);
+  }
+}
+
+.questionSection {
+  margin-bottom: 30px;
+  animation: fadeIn 0.5s ease;
+}
+
+.questionText {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #fff;
+}
+
+.answerSection {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.optionBtn {
+  width: 100%;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  color: rgba(255,255,255,0.9);
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  text-align: left;
   position: relative;
   overflow: hidden;
 
-  // Glassmorphism effect
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.question-section {
-  margin-bottom: 20px;
-
-  .question-count {
-    margin-bottom: 15px;
+  .letter {
+    background: rgba(255,255,255,0.1);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    margin-right: 15px;
     font-size: 14px;
-    color: #aaa;
-    
-    span {
-      font-size: 24px;
-      color: $primary;
-      font-weight: bold;
-    }
-  }
-
-  .question-text {
-    font-size: 18px;
     font-weight: 600;
-    margin-bottom: 20px;
-    line-height: 1.4;
   }
-  
-  .progress-bar {
-    height: 6px;
-    background: #444;
-    border-radius: 10px;
-    margin-top: 10px;
+
+  &:hover:not(:disabled) {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.3);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+
+  &.correct {
+    background: rgba($correct, 0.2);
+    border-color: $correct;
+    color: $correct;
     
-    .fill {
-      height: 100%;
-      background: $primary;
-      border-radius: 10px;
-      transition: width 0.3s ease;
+    .letter {
+      background: $correct;
+      color: #000;
     }
+  }
+
+  &.wrong {
+    background: rgba($wrong, 0.2);
+    border-color: $wrong;
+    color: $wrong;
+
+    .letter {
+      background: $wrong;
+      color: #fff;
+    }
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
-.answer-section {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  button {
-    width: 100%;
-    padding: 15px;
-    background: #3A3A4A;
-    border: 2px solid transparent;
-    border-radius: 12px;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: left;
-
-    &:hover:not([disabled]) {
-      background: #4A4A5A;
-      transform: translateY(-2px);
-    }
-
-    &.correct {
-      background: rgba($correct, 0.2);
-      border-color: $correct;
-    }
-
-    &.wrong {
-      background: rgba($wrong, 0.2);
-      border-color: $wrong;
-    }
-  }
-}
-
-.feedback-popup {
-  margin-top: 20px;
+.feedbackPopup {
+  margin-top: 25px;
   padding: 15px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 10px;
+  border-radius: 12px;
   text-align: center;
-  animation: fadeIn 0.5s;
+  font-size: 14px;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid transparent;
+
+  &.success {
+    background: rgba($correct, 0.1);
+    border-color: rgba($correct, 0.3);
+    color: lighten($correct, 10%);
+  }
+
+  &.error {
+    background: rgba($wrong, 0.1);
+    border-color: rgba($wrong, 0.3);
+    color: lighten($wrong, 10%);
+  }
 }
 
-.score-section {
+.scoreSection {
   text-align: center;
+  animation: scaleUp 0.5s ease;
+  
+  h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    background: linear-gradient(to right, #fff, #a29bfe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
   
   .gauge {
-    font-size: 40px;
-    font-weight: bold;
+    font-size: 60px;
+    font-weight: 700;
     color: $primary;
     margin: 30px 0;
+    text-shadow: 0 0 20px rgba($primary, 0.5);
+
+    .total {
+      font-size: 24px;
+      color: rgba(255,255,255,0.4);
+    }
   }
   
   .message {
     font-size: 18px;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    color: #e0e0e0;
   }
   
-  button {
-    background: $primary;
+  .restartBtn {
+    background: linear-gradient(90deg, $primary, #FF007A);
     color: white;
     border: none;
-    padding: 12px 30px;
-    border-radius: 25px;
-    font-weight: bold;
+    padding: 16px 40px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 30px rgba(108, 99, 255, 0.4);
+    }
   }
 }
 
+// Animations
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
