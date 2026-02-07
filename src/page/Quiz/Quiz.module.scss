@@ -1,3 +1,6 @@
+@use 'sass:color';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
 $primary: #6C63FF;
 $secondary: #2A2A2A;
 $correct: #00E676;
@@ -7,7 +10,6 @@ $bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 $glass-bg: rgba(255, 255, 255, 0.05);
 $glass-border: rgba(255, 255, 255, 0.1);
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 .app {
   width: 100%;
@@ -85,7 +87,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
 }
 
 .badge {
-  background: rgba($primary, 0.2);
+  background: color.change($primary, $alpha: 0.2);
   color: #a29bfe;
   padding: 5px 12px;
   border-radius: 20px;
@@ -118,7 +120,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     background: linear-gradient(90deg, $primary, #a29bfe);
     border-radius: 10px;
     transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 10px rgba($primary, 0.5);
+    box-shadow: 0 0 10px color.change($primary, $alpha: 0.5);
   }
 }
 
@@ -178,7 +180,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 
   &.correct {
-    background: rgba($correct, 0.2);
+    background: color.change($correct, $alpha: 0.2);
     border-color: $correct;
     color: $correct;
     
@@ -189,7 +191,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 
   &.wrong {
-    background: rgba($wrong, 0.2);
+    background: color.change($wrong, $alpha: 0.2);
     border-color: $wrong;
     color: $wrong;
 
@@ -215,15 +217,15 @@ $glass-border: rgba(255, 255, 255, 0.1);
   border: 1px solid transparent;
 
   &.success {
-    background: rgba($correct, 0.1);
-    border-color: rgba($correct, 0.3);
-    color: lighten($correct, 10%);
+    background: color.change($correct, $alpha: 0.1);
+    border-color: color.change($correct, $alpha: 0.3);
+    color: color.adjust($correct, $lightness: 10%);
   }
 
   &.error {
-    background: rgba($wrong, 0.1);
-    border-color: rgba($wrong, 0.3);
-    color: lighten($wrong, 10%);
+    background: color.change($wrong, $alpha: 0.1);
+    border-color: color.change($wrong, $alpha: 0.3);    
+    color: color.adjust($wrong, $lightness: 10%);
   }
 }
 
@@ -244,7 +246,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     font-weight: 700;
     color: $primary;
     margin: 30px 0;
-    text-shadow: 0 0 20px rgba($primary, 0.5);
+    text-shadow: 0 0 20px color.change($primary, $alpha: 0.5);
 
     .total {
       font-size: 24px;
@@ -269,11 +271,11 @@ $glass-border: rgba(255, 255, 255, 0.1);
     font-weight: 600;
     cursor: pointer;
     transition: transform 0.2s;
-    box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+    box-shadow: 0 10px 20px color.change($primary, $alpha: 0.3);
 
     &:hover {
       transform: scale(1.05);
-      box-shadow: 0 15px 30px rgba(108, 99, 255, 0.4);
+      box-shadow: 0 15px 30px color.change($primary, $alpha: 0.4);
     }
   }
 }
