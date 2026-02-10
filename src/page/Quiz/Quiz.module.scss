@@ -86,7 +86,7 @@ $text: #F0Fdf4;
 
 .badge {
   background: rgba($primary-accent, 0.15);
-  color: lighten($primary-accent, 10%);
+  color: color.adjust($primary-accent, $lightness: 10%);
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 11px;
@@ -217,13 +217,13 @@ $text: #F0Fdf4;
   &.success {
     background: rgba($primary-accent, 0.1);
     border: 1px solid rgba($primary-accent, 0.2);
-    color: lighten($primary-accent, 10%);
+    color: color.adjust($primary-accent, $lightness: 10%);
   }
 
   &.error {
     background: rgba($secondary-accent, 0.1);
     border: 1px solid rgba($secondary-accent, 0.2);
-    color: lighten($secondary-accent, 10%);
+    color: color.adjust($secondary-accent, $lightness: 10%);
   }
 }
 

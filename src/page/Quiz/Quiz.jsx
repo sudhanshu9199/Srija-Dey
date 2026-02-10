@@ -54,14 +54,6 @@ function Quiz() {
     hover: { scale: 1.03, originX: 0 }
   };
 
-  const getPersonalizedMessage = () => {
-    const percentage = (score / questions.length) * 100;
-    if (percentage === 100) return `Outstanding, ${studentName}! You are a Chemistry Genius! 🌟🏆`;
-    if (percentage >= 80) return `Great job, ${studentName}! Almost perfect. Keep it up! 🚀`;
-    if (percentage >= 50) return `Good effort, ${studentName}. Let's revise the 'Isotopes' chapter again. 📚`;
-    return `Don't worry, ${studentName}. Practice makes perfect! Let's try again? 💪`;
-  };
-
   return (
     <div className={style.app}>
       <div className={style.backgroundShapes}></div> {/* Background Animation */}
