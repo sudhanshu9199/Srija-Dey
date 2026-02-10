@@ -71,7 +71,7 @@ function Quiz() {
         winSound.play().catch((e) => console.log("Audio interaction blocked", e));
         if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
       }
-    }, 1000);
+    }, 3000);
   };
 
   // Animation Variants
