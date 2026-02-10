@@ -26,24 +26,30 @@ function Quiz() {
   }, []);
 
   const handleAnswerOptionClick = (index) => {
-
-    popSound.currentTime = 0; // Reset sound to allow rapid clicking
-    popSound.play().catch((e) => console.log("Audio interaction blocked", e));
-
+    // 1. Set the selected option immediately
     setSelectedOption(index);
     const isCorrect = index === questions[currentQuestion].correct;
     setIsCorrectState(isCorrect);
 
+    // 2. LOGIC FIX: Play specific sound based on result (Prevents overlapping sounds)
+    if (isCorrect) {
+      popSound.currentTime = 0;
+      popSound.play().catch((e) => console.log("Audio interaction blocked", e));
+    } else {
+      errorSound.currentTime = 0;
+      errorSound.play().catch(() => {});
+    }
+
+    // 3. LOGIC FIX: Vibration is now independent of Sound
+    // (This ensures sound still works on devices without vibration support)
     if (navigator.vibrate) {
       if (isCorrect) {
-        navigator.vibrate(50); // Short, sharp tick for correct
+        navigator.vibrate(50); // Short tick
       } else {
-        navigator.vibrate([50, 50, 50]); // Heavy buzz pattern for wrong
-        errorSound.play().catch(() => {}); // Optional error sound
+        navigator.vibrate([50, 50, 50]); // Heavy buzz
       }
     }
-    
-    
+
     if (isCorrect) {
       setScore(score + 1);
       setFeedback(questions[currentQuestion].explanation);
