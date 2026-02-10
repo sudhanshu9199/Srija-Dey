@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import style from './Quiz.module.scss';
 import { questions } from '../../data/questions';
+import popAudio from '../../assets/sounds/pop.mp3'
+import winAudio from '../../assets/sounds/win.mp3'
+import errorAudio from '../../assets/sounds/errorSound.mp3'
+
+const popSound = new Audio(popAudio);
+const winSound = new Audio(winAudio);
+const errorSound = new Audio(errorAudio); 
 
 function Quiz() {
   const studentName = "Srija Dey"; // Updated Name
@@ -12,10 +19,30 @@ function Quiz() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [isCorrectState, setIsCorrectState] = useState(null); // To style specific button
 
+  useEffect(() => {
+    popSound.load();
+    winSound.load();
+    errorSound.load();
+  }, []);
+
   const handleAnswerOptionClick = (index) => {
+
+    popSound.currentTime = 0; // Reset sound to allow rapid clicking
+    popSound.play().catch((e) => console.log("Audio interaction blocked", e));
+
     setSelectedOption(index);
     const isCorrect = index === questions[currentQuestion].correct;
     setIsCorrectState(isCorrect);
+
+    if (navigator.vibrate) {
+      if (isCorrect) {
+        navigator.vibrate(50); // Short, sharp tick for correct
+      } else {
+        navigator.vibrate([50, 50, 50]); // Heavy buzz pattern for wrong
+        errorSound.play().catch(() => {}); // Optional error sound
+      }
+    }
+    
     
     if (isCorrect) {
       setScore(score + 1);
@@ -34,6 +61,9 @@ function Quiz() {
         setFeedback("");
       } else {
         setShowScore(true);
+
+        winSound.play().catch((e) => console.log("Audio interaction blocked", e));
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
       }
     }, 1000);
   };
