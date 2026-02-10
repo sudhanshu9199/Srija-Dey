@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import style from './Quiz.module.scss';
 import { questions } from '../../data/questions';
 
@@ -20,7 +21,7 @@ function Quiz() {
       setScore(score + 1);
       setFeedback(questions[currentQuestion].explanation);
     } else {
-      setFeedback("Oops! Try reviewing the notes again. 📉");
+      setFeedback("Oop! Not quite. Check the notes! 🧬");
     }
 
     // Delay to show feedback before moving next
@@ -34,7 +35,23 @@ function Quiz() {
       } else {
         setShowScore(true);
       }
-    }, 2500);
+    }, 1000);
+  };
+
+  // Animation Variants
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+  };
+
+  const optionVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: (i) => ({ 
+      opacity: 1, 
+      x: 0, 
+      transition: { delay: i * 0.1 } 
+    }),
+    hover: { scale: 1.03, originX: 0 }
   };
 
   const getPersonalizedMessage = () => {
@@ -48,46 +65,73 @@ function Quiz() {
   return (
     <div className={style.app}>
       <div className={style.backgroundShapes}></div> {/* Background Animation */}
-      
-      <div className={style.container}>
+
+      <motion.div 
+        className={style.container}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {showScore ? (
-          <div className={style.scoreSection}>
-            <h2>Quiz Completed!</h2>
+          <motion.div 
+            className={style.scoreSection}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+          >
+            <h2>Quiz Slayed! ✨</h2>
             <div className={style.gauge}>
               <span>{score}</span> <span className={style.total}>/ {questions.length}</span>
             </div>
-            <p className={style.message}>{getPersonalizedMessage()}</p>
+            <p className={style.message}>
+              {score === questions.length ? "Queen of Biology! 👑🦠" : 
+               score > 5 ? "Solid effort! You're getting there! 🌿" : "Let's re-read that chapter! 📚"}
+            </p>
             <button className={style.restartBtn} onClick={() => window.location.reload()}>
-              Restart Quiz 🔄
+              Replay Level 🔄
             </button>
-          </div>
+          </motion.div>
         ) : (
           <>
             <div className={style.header}>
-               <div className={style.badge}>Chemistry Quiz</div>
+               <div className={style.badge}>Biology • Tissues</div>
                <div className={style.progressText}>
-                 Question {currentQuestion + 1} <span className={style.total}>/ {questions.length}</span>
+                 Q{currentQuestion + 1} <span className={style.total}>/ {questions.length}</span>
                </div>
             </div>
 
             <div className={style.progressBar}>
-                <div 
+                <motion.div 
                   className={style.fill} 
-                  style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
-                ></div>
+                  initial={{ width: 0 }}
+                  animate={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+                ></motion.div>
             </div>
 
-            {/* Key added here triggers animation on change */}
-            <div key={currentQuestion} className={style.questionSection}>
-              <div className={style.questionText}>
-                {questions[currentQuestion].question}
-              </div>
-            </div>
+            <AnimatePresence mode='wait'>
+              <motion.div 
+                key={currentQuestion} 
+                className={style.questionSection}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className={style.questionText}>
+                  {questions[currentQuestion].question}
+                </div>
+              </motion.div>
+            </AnimatePresence>
             
             <div className={style.answerSection}>
               {questions[currentQuestion].options.map((option, index) => (
-                <button 
+                <motion.button 
                   key={index} 
+                  custom={index}
+                  variants={optionVariants}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover="hover"
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => handleAnswerOptionClick(index)}
                   className={`
                     ${style.optionBtn} 
@@ -98,18 +142,25 @@ function Quiz() {
                 >
                   <span className={style.letter}>{String.fromCharCode(65 + index)}</span>
                   {option}
-                </button>
+                </motion.button>
               ))}
             </div>
             
-            {feedback && (
-              <div className={`${style.feedbackPopup} ${isCorrectState ? style.success : style.error}`}>
-                {feedback}
-              </div>
-            )}
+            <AnimatePresence>
+              {feedback && (
+                <motion.div 
+                  className={`${style.feedbackPopup} ${isCorrectState ? style.success : style.error}`}
+                  initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  {feedback}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

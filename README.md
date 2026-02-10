@@ -14,3 +14,11 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+
+
+I want you to create a website application, an application on: "there are pre-written MCQ questions, also track it the student performance, Process, progress, on the Performance give feedback to her 'Sriya Dey' (student) and ready to deploy live, and a responsive UI for mobiles, students are get enggaged with this process." use ReactJS, Scss (for styling).
+
+
+Improve the UI Design seamless look, fancy look, students like it the UI with different animations. Also make it feels like a professional looks. Also Chnage the name of Student with Srija Dey
