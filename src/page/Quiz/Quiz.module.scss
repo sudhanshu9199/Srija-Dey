@@ -1,278 +1,122 @@
-// src/page/Quiz/Quiz.module.scss
-@use 'sass:color';
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
 
-// Gen-Z / Bio Palette
-$bg-dark: #0f172a;
-$bg-gradient: linear-gradient(135deg, #051923 0%, #003554 100%);
-$primary-accent: #00E676; // Bio Green
-$secondary-accent: #FF007A; // Neon Pink
-$glass-bg: rgba(255, 255, 255, 0.08);
-$glass-border: rgba(255, 255, 255, 0.15);
-$text: #F0Fdf4;
-
-.app {
-  width: 100%;
-  min-height: 100dvh;
+.appContainer {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Poppins', sans-serif;
-  background: $bg-gradient;
-  color: $text;
-  position: relative;
+  background: #0d0e15; /* Deep dark space color */
+  font-family: 'Outfit', sans-serif;
   overflow: hidden;
+  position: relative;
 }
 
-// Organic Floating Blobs
-.backgroundShapes {
+/* Simulated Audio Wave Background */
+.waveBg {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
+  width: 200vw;
+  height: 100vh;
+  background: radial-gradient(circle at 50% 50%, rgba(185, 103, 255, 0.15) 0%, transparent 60%);
+  animation: pulseWave 6s infinite alternate;
   z-index: 0;
-  overflow: hidden;
-
-  &::before, &::after {
-    content: '';
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: $primary-accent;
-    filter: blur(120px);
-    opacity: 0.25;
-    border-radius: 50%;
-    animation: moveBlob 15s infinite alternate ease-in-out;
-  }
-
-  &::before {
-    top: -100px;
-    left: -100px;
-    background: $secondary-accent;
-  }
-
-  &::after {
-    bottom: -100px;
-    right: -100px;
-    animation-delay: -7s;
-  }
 }
 
-@keyframes moveBlob {
-  from { transform: translate(0, 0) scale(1); }
-  to { transform: translate(60px, 60px) scale(1.1); }
+@keyframes pulseWave {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 1; }
 }
 
-.container {
-  position: relative;
-  z-index: 10;
-  background: $glass-bg;
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+.glassCard {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  padding: 40px;
   width: 90%;
-  max-width: 550px;
-  border-radius: 30px; // Softer corners
-  padding: 35px;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 0 0 1px $glass-border;
+  max-width: 500px;
+  z-index: 10;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
-}
-
-.badge {
-  background: rgba($primary-accent, 0.15);
-  color: color.adjust($primary-accent, $lightness: 10%);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
+  gap: 10px;
+  color: #01cdfe; /* Neon Cyan */
+  font-weight: 600;
+  font-size: 0.9rem;
   text-transform: uppercase;
-  border: 1px solid rgba($primary-accent, 0.3);
+  letter-spacing: 2px;
 }
 
-.progressText {
-  font-size: 14px;
-  font-weight: 700;
-  color: $text;
-  
-  .total {
-    color: rgba($text, 0.5);
-    font-weight: 400;
-  }
-}
-
-.progressBar {
-  height: 8px;
-  background: rgba(0,0,0,0.3);
-  border-radius: 10px;
-  margin-bottom: 35px;
-  overflow: hidden;
-  
-  .fill {
-    height: 100%;
-    background: linear-gradient(90deg, $secondary-accent, $primary-accent);
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba($primary-accent, 0.4);
-  }
-}
-
-.questionSection {
-  margin-bottom: 35px;
-  min-height: 80px; // Prevent jumping
+.iconGlow {
+  filter: drop-shadow(0 0 8px #01cdfe);
 }
 
 .questionText {
-  font-size: 22px;
-  font-weight: 700;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 600;
   line-height: 1.4;
-  color: $text;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  margin: 0;
 }
 
-.answerSection {
+.optionsGrid {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .optionBtn {
-  width: 100%;
-  padding: 18px 22px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 20px;
-  color: rgba(255,255,255,0.9);
-  font-size: 16px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 500;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 113, 206, 0.3); /* Soft pink border */
+  color: #e2e2e2;
+  padding: 16px 20px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 1.1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(255, 113, 206, 0.1);
+    color: #fff;
+  }
+}
+
+.gradientText {
+  background: linear-gradient(90deg, #ff71ce, #b967ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.scoreText {
+  color: #a0a0b0;
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.neonBtn {
+  background: #b967ff;
+  color: #fff;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
+  justify-content: center;
   align-items: center;
-  text-align: left;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.2s;
-
-  .letter {
-    background: rgba(255,255,255,0.1);
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    margin-right: 15px;
-    font-size: 14px;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  &:hover:not(:disabled) {
-    background: rgba(255,255,255,0.07);
-    border-color: rgba(255,255,255,0.4);
-  }
-
-  &.correct {
-    background: rgba($primary-accent, 0.15);
-    border-color: $primary-accent;
-    color: $primary-accent;
-    
-    .letter {
-      background: $primary-accent;
-      color: #000;
-    }
-  }
-
-  &.wrong {
-    background: rgba($secondary-accent, 0.15);
-    border-color: $secondary-accent;
-    color: $secondary-accent;
-
-    .letter {
-      background: $secondary-accent;
-      color: #fff;
-    }
-  }
-
-  &.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-}
-
-.feedbackPopup {
-  margin-top: 30px;
-  padding: 16px;
-  border-radius: 16px;
-  text-align: center;
-  font-size: 15px;
-  font-weight: 600;
-  
-  &.success {
-    background: rgba($primary-accent, 0.1);
-    border: 1px solid rgba($primary-accent, 0.2);
-    color: color.adjust($primary-accent, $lightness: 10%);
-  }
-
-  &.error {
-    background: rgba($secondary-accent, 0.1);
-    border: 1px solid rgba($secondary-accent, 0.2);
-    color: color.adjust($secondary-accent, $lightness: 10%);
-  }
-}
-
-.scoreSection {
-  text-align: center;
-  
-  h2 {
-    font-size: 32px;
-    margin-bottom: 10px;
-    background: linear-gradient(to right, $secondary-accent, $primary-accent);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 800;
-  }
-  
-  .gauge {
-    font-size: 70px;
-    font-weight: 800;
-    color: $text;
-    margin: 30px 0;
-    text-shadow: 0 0 30px rgba($primary-accent, 0.6);
-
-    .total {
-      font-size: 28px;
-      color: rgba($text, 0.4);
-    }
-  }
-  
-  .message {
-    font-size: 18px;
-    margin-bottom: 40px;
-    color: #cbd5e1;
-  }
-  
-  .restartBtn {
-    background: linear-gradient(90deg, $secondary-accent, $primary-accent);
-    color: #000;
-    border: none;
-    padding: 18px 45px;
-    border-radius: 50px;
-    font-size: 16px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    box-shadow: 0 10px 30px rgba($secondary-accent, 0.4);
-    
-    &:hover {
-      box-shadow: 0 15px 40px rgba($primary-accent, 0.5);
-    }
-  }
+  gap: 8px;
+  box-shadow: 0 0 20px rgba(185, 103, 255, 0.4);
 }

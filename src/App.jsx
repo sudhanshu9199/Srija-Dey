@@ -8,7 +8,7 @@ const App = () => {
 
   return (
     <>
-      {isPlaying ? (
+      {/* {isPlaying ? (
         <div className="intro-video-container">
           <video 
             autoPlay 
@@ -21,8 +21,8 @@ const App = () => {
           </video>
         </div>
       ) : (
-        <Quiz />
-      )}
+      )} */}
+      <Quiz />
     </>
   )
 }
