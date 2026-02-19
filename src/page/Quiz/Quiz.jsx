@@ -7,6 +7,10 @@ import 'katex/dist/katex.min.css'; // LaTeX ki CSS zaroori hai
 import styles from './Quiz.module.scss';
 import { questions } from '../../data/questions';
 
+import popSound from '../../assets/sounds/pop.mp3';
+import winSound from '../../assets/sounds/win.mp3';
+import errorSoundFile from '../../assets/sounds/errorSound.mp3';
+
 const Quiz = () => {
   const [currentQues, setCurrentQues] = useState(0);
   const [score, setScore] = useState(0);
@@ -17,9 +21,9 @@ const Quiz = () => {
   const [showExplanation, setShowExplanation] = useState(false);
 
   // Sound effects logic
-  const playPop = () => new Audio('/src/assets/sounds/pop.mp3').play();
-  const playWin = () => new Audio('/src/assets/sounds/win.mp3').play();
-  const playError = () => new Audio('/src/assets/sounds/errorSound.mp3').play();
+  const playPop = () => new Audio(popSound).play().catch(e => console.error("Audio play blocked:", e));
+  const playWin = () => new Audio(winSound).play().catch(e => console.error("Audio play blocked:", e));
+  const playError = () => new Audio(errorSoundFile).play().catch(e => console.error("Audio play blocked:", e));
 
   const handleAnswer = (index, isCorrect) => {
     // Agar already answer de diya hai, toh double click prevent karo
