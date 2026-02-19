@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Confetti from 'react-confetti';
-import { Volume2, Play } from 'lucide-react';
+import { Volume2, Play, ArrowRight } from 'lucide-react';
+import Latex from 'react-latex-next';
+import 'katex/dist/katex.min.css'; // LaTeX ki CSS zaroori hai
 import styles from './Quiz.module.scss';
 import { questions } from '../../data/questions';
 
@@ -9,14 +11,34 @@ const Quiz = () => {
   const [currentQues, setCurrentQues] = useState(0);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  
+  // Naye states feedback aur explanation flow ke liye
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [showExplanation, setShowExplanation] = useState(false);
 
   // Sound effects logic
   const playPop = () => new Audio('/src/assets/sounds/pop.mp3').play();
   const playWin = () => new Audio('/src/assets/sounds/win.mp3').play();
+  const playError = () => new Audio('/src/assets/sounds/errorSound.mp3').play();
 
-  const handleAnswer = (isCorrect) => {
-    playPop();
-    if (isCorrect) setScore(score + 1);
+  const handleAnswer = (index, isCorrect) => {
+    // Agar already answer de diya hai, toh double click prevent karo
+    if (showExplanation) return; 
+
+    setSelectedAnswer(index);
+    setShowExplanation(true);
+    
+    if (isCorrect) {
+      playPop();
+      setScore(score + 1);
+    } else {
+      playError(); 
+    }
+  };
+
+  const handleNext = () => {
+    setSelectedAnswer(null);
+    setShowExplanation(false);
     
     const nextQues = currentQues + 1;
     if (nextQues < questions.length) {
@@ -29,7 +51,6 @@ const Quiz = () => {
 
   return (
     <div className={styles.appContainer}>
-      {/* Background animated sound waves */}
       <div className={styles.waveBg}></div>
 
       <AnimatePresence mode="wait">
@@ -67,42 +88,64 @@ const Quiz = () => {
               <span>Frequency {currentQues + 1} / {questions.length}</span>
             </div>
 
-            <h2 className={styles.questionText}>{questions[currentQues].question}</h2>
+            {/* LaTeX Text Wrapper for Math Equations */}
+            <h2 className={styles.questionText}>
+              <Latex>{questions[currentQues].question}</Latex>
+            </h2>
 
-            <motion.div 
-              className={styles.optionsGrid}
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: { staggerChildren: 0.1 }
-                }
-              }}
-            >
+            <motion.div className={styles.optionsGrid}>
               {questions[currentQues].options.map((option, index) => {
-                
                 const isCorrect = index === questions[currentQues].correct;
+                
+                // Color logic: Agar answer check ho chuka hai
+                let btnStyle = styles.optionBtn;
+                if (showExplanation) {
+                  if (isCorrect) {
+                    btnStyle = `${styles.optionBtn} ${styles.correctOption}`;
+                  } else if (selectedAnswer === index) {
+                    btnStyle = `${styles.optionBtn} ${styles.wrongOption}`;
+                  }
+                }
 
                 return (
                   <motion.button
                     key={index}
-                    variants={{
-                      hidden: { opacity: 0, y: 20 },
-                      visible: { opacity: 1, y: 0 }
-                    }}
-                    whileHover={{ scale: 1.03, boxShadow: "0px 0px 15px rgba(255, 113, 206, 0.4)" }}
-                    whileTap={{ scale: 0.95 }}
-                    className={styles.optionBtn}
-                    onClick={() => handleAnswer(isCorrect)}
+                    whileHover={!showExplanation ? { scale: 1.03, boxShadow: "0px 0px 15px rgba(255, 113, 206, 0.4)" } : {}}
+                    whileTap={!showExplanation ? { scale: 0.95 } : {}}
+                    className={btnStyle}
+                    onClick={() => handleAnswer(index, isCorrect)}
+                    disabled={showExplanation} // Disable clicking other options after selection
                   >
-                    {/* FIX 4: Render the 'option' string directly */}
-                    {option}
+                    <Latex>{option}</Latex>
                   </motion.button>
                 );
               })}
             </motion.div>
+
+            {/* Explanation Box - smoothly animates in */}
+            <AnimatePresence>
+              {showExplanation && (
+                <motion.div 
+                  className={styles.explanationBox}
+                  initial={{ opacity: 0, y: 20, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: "auto" }}
+                  exit={{ opacity: 0, y: 10, height: 0 }}
+                >
+                  <p className={styles.explanationText}>
+                    <Latex>{questions[currentQues].explanation}</Latex>
+                  </p>
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={styles.nextBtn}
+                    onClick={handleNext}
+                  >
+                    Next Vibe <ArrowRight size={18} />
+                  </motion.button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            
           </motion.div>
         )}
       </AnimatePresence>

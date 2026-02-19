@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "framer-motion": "^12.34.2",
+    "katex": "^0.16.28",
     "lucide-react": "^0.574.0",
     "react": "^19.2.0",
     "react-confetti": "^6.4.0",
     "react-dom": "^19.2.0",
+    "react-latex-next": "^3.0.0",
     "sass": "^1.97.3"
   },
   "devDependencies": {
